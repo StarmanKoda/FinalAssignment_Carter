@@ -10,10 +10,28 @@ public class GunScript : MonoBehaviour
     public int gunSelected = 0;
     protected float coolTimer = 0;
     public ParticleSystem particle;
+    public bool otherweap = false;
+    public GameObject CoinDisplay;
+    public GameObject MoneyDisplay;
 
     // Update is called once per frame
     private void Update()
     {
+        if (Input.GetButtonDown("WeaponSwitch"))
+        {
+            if (gunSelected == 0)
+            { 
+              gunSelected = 1;
+              otherweap = !otherweap;
+            }
+            else
+            {
+                gunSelected = 0;
+                otherweap = !otherweap;
+            }
+
+            
+        }
 
         if (cooldownTime > coolTimer)
         {
@@ -22,8 +40,28 @@ public class GunScript : MonoBehaviour
 
         if (Input.GetButtonDown("Fire2"))
         {
-            Shoot();
-            coolTimer = cooldownTime;
+            if (MoneyManagement.Instance.Balance > MoneyManagement.Instance.DollarCost && otherweap == false)
+            { 
+                Shoot();
+                coolTimer = cooldownTime;
+                MoneyManagement.Instance.Balance -= MoneyManagement.Instance.DollarCost;
+            }
+            else if (MoneyManagement.Instance.Balance > MoneyManagement.Instance.CoinCost && otherweap == true)
+            {
+                Shoot();
+                coolTimer = cooldownTime;
+                MoneyManagement.Instance.Balance -= MoneyManagement.Instance.CoinCost;
+            }
+        }
+        if (otherweap == true)
+        {
+            MoneyDisplay.SetActive(false);
+            CoinDisplay.SetActive(true);
+        }
+        else
+        {
+            MoneyDisplay.SetActive(true);
+            CoinDisplay.SetActive(false);
         }
     }
 

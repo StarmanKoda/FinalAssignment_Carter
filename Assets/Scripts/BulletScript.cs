@@ -23,11 +23,9 @@ public class BulletScript : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            Destroy(other.gameObject);
-            Destroy(gameObject);
-            Instantiate(collisionEffect, transform.position, Quaternion.identity);
-        }
+        
+       Destroy(gameObject);
+       Instantiate(collisionEffect, transform.position, Quaternion.identity);
+        
     }
 }

@@ -10,6 +10,8 @@ public class FirstPersonMovement: MonoBehaviour
     public CharacterController controller;
     public float speed = 12f;
     public float gravity = -9.81f;
+    public float dmgcool = 1.5f;
+    public float damagetimer;
 
     public Transform groundCheck;
     public float groundDistance = 0.4f;
@@ -21,6 +23,10 @@ public class FirstPersonMovement: MonoBehaviour
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        if (damagetimer < dmgcool)
+        {
+            damagetimer += Time.deltaTime;
+        }
 
         if(isGrounded && velocity.y < 0)
         {
@@ -33,5 +39,13 @@ public class FirstPersonMovement: MonoBehaviour
         controller.Move(move * speed * Time.deltaTime);
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+    }
+    void OnTriggerEnter(Collider coll)
+    {
+        if (coll.gameObject.tag == "Enemy" && (damagetimer >= dmgcool))
+        {
+            MoneyManagement.Instance.Balance -= MoneyManagement.Instance.DamageCost;
+            damagetimer = 0;
+        }
     }
 }
